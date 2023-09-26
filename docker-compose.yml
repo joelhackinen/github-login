@@ -1,0 +1,40 @@
+version: "3.4"
+
+services:
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '8080:80'
+    container_name: reverse-proxy
+    depends_on:
+      - app
+      - api
+
+  app:
+    image: login-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/:/usr/src/app
+    expose:
+      - 3000
+    container_name: login-client
+    depends_on:
+      - api
+
+  api:
+    image: login-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: 'no'
+    volumes:
+      - ./api/:/usr/src/app
+    expose:
+      - 7777
+    env_file:
+      - project.env
+    container_name: login-api
