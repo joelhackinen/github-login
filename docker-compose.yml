@@ -19,8 +19,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./client/:/usr/src/app
-    expose:
-      - 3000
+    ports:
+      - '3000:3000'
     container_name: login-client
     env_file:
       - project.env
@@ -35,8 +35,8 @@ services:
     restart: 'no'
     volumes:
       - ./api/:/usr/src/app
-    expose:
-      - 7777
+    ports:
+      - '7777:7777'
     env_file:
       - project.env
     container_name: login-api
