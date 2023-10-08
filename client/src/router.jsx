@@ -2,19 +2,35 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import App from './App.jsx';
 import Projects from './Projects.jsx';
 
-let githubAccessToken;
+const tokenClosure = (() => {
+  let githubAccessToken;
+
+  const setToken = (token) => {
+    githubAccessToken = token;
+  };
+
+  return {
+    set: (token) => {
+      setToken(token);
+    },
+    get: () => {
+      return githubAccessToken;
+    },
+  };
+})();
+
 let reposUrl;
 
 const githubCallbackLoader = async ({ request }) => {
   const url = new URL(request.url);
   const codeParam = url.searchParams.get("code");
   const res = await fetch(`/api/github/getAccessToken?code=${codeParam}`);
-  githubAccessToken = (await res.json()).access_token;
+  tokenClosure.set((await res.json()).access_token);
   return redirect("/");
 };
 
 const appLoader = async () => {
-  if (!githubAccessToken) {
+  if (!tokenClosure.get()) {
     return null;
   }
 
@@ -24,7 +40,7 @@ const appLoader = async () => {
       method: "GET",
       headers: {
         'Accept': 'application/vnd.github+json',
-        'Authorization': `Bearer ${githubAccessToken}`,
+        'Authorization': `Bearer ${tokenClosure.get()}`,
         'X-GitHub-Api-Version': '2022-11-28',
       },
     });
