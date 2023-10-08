@@ -1,8 +1,9 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
-import App from './App.js';
-import Projects from './Projects.js';
+import App from './App.jsx';
+import Projects from './Projects.jsx';
 
 let githubAccessToken;
+let reposUrl;
 
 const githubCallbackLoader = async ({ request }) => {
   const url = new URL(request.url);
@@ -30,6 +31,15 @@ const appLoader = async () => {
   } catch (e) {
     return null;
   }
+  const data = await res.json();
+  reposUrl = data.repos_url;
+  return data;
+};
+
+const projectsLoader = async () => {
+  if (!reposUrl) return redirect("/");
+
+  const res = await fetch(reposUrl);
   return res;
 };
 
@@ -43,6 +53,7 @@ const router = createBrowserRouter([
       {
         path: '/projects',
         element: <Projects />,
+        loader: projectsLoader,
       },
     ]
   },
