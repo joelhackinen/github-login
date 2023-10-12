@@ -1,4 +1,8 @@
-import { createBrowserRouter, redirect } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  redirect,
+  defer
+} from 'react-router-dom';
 import App from './App.jsx';
 import Profile from './Profile.jsx';
 import Main from './Main.jsx';
@@ -42,11 +46,13 @@ const profileLoader = async () => {
     },
   });
 
-  const userData = await res1.json();
-  const res2 = await fetch(userData.repos_url);
-  const reposData = await res2.json();
+  const user = await res1.json();
+  const reposData = fetch(user.repos_url);
 
-  return { user: userData, repos: reposData };
+  return defer({
+    user,
+    repos: reposData.then((res) => res.json())
+  });
 };
 
 const logoutAction = () => {
@@ -58,7 +64,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    errorElement: <div>moro</div>,
+    errorElement: <div className='text-sky-500'>moro</div>,
     children: [
       {
         path: '/',
