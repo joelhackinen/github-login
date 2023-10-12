@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from 'react-router-dom';
 import App from './App.jsx';
-import Projects from './Projects.jsx';
+import Profile from './Profile.jsx';
+import Main from './Main.jsx';
 
 const tokenClosure = (() => {
   let githubAccessToken;
@@ -19,64 +20,65 @@ const tokenClosure = (() => {
   };
 })();
 
-let reposUrl;
-
 const githubCallbackLoader = async ({ request }) => {
   const url = new URL(request.url);
   const codeParam = url.searchParams.get("code");
   const res = await fetch(`/api/github/getAccessToken?code=${codeParam}`);
   tokenClosure.set((await res.json()).access_token);
-  return redirect("/");
+  return redirect("/profile");
 };
 
-const appLoader = async () => {
+const profileLoader = async () => {
   if (!tokenClosure.get()) {
-    return null;
+    return redirect("/");
   }
 
-  let res;
-  try {
-    res = await fetch("https://api.github.com/user", {
-      method: "GET",
-      headers: {
-        'Accept': 'application/vnd.github+json',
-        'Authorization': `Bearer ${tokenClosure.get()}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
-  } catch (e) {
-    return null;
-  }
-  const data = await res.json();
-  reposUrl = data.repos_url;
-  return data;
+  let res1 = await fetch("https://api.github.com/user", {
+    method: "GET",
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${tokenClosure.get()}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  const userData = await res1.json();
+  const res2 = await fetch(userData.repos_url);
+  const reposData = await res2.json();
+
+  return { user: userData, repos: reposData };
 };
 
-const projectsLoader = async () => {
-  if (!reposUrl) return redirect("/");
-
-  const res = await fetch(reposUrl);
-  return res;
+const logoutAction = () => {
+  tokenClosure.set(undefined);
+  return redirect("/");
 };
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    id: 'root',
-    loader: appLoader,
+    errorElement: <div>moro</div>,
     children: [
       {
-        path: '/projects',
-        element: <Projects />,
-        loader: projectsLoader,
+        path: '/',
+        element: <Main />
       },
-    ]
+      {
+        path: '/profile',
+        loader: profileLoader,
+        element: <Profile />
+      },
+      {
+        path: '/github/callback/*',
+        loader: githubCallbackLoader,
+      },
+    ],
   },
   {
-    path: '/github/callback/*',
-    loader: githubCallbackLoader,
-  },
+    path: '/logout',
+    action: logoutAction,
+  }
 ]);
 
 export default router;
