@@ -16,10 +16,10 @@ const ProjectList = () => {
   };
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-12">
       <div className="flex flex-row self-center gap-x-16">
         <button
-          className={`hover:font-bold hover:text-sky-800 ${
+          className={`hover:font-bold hover:underline ${
             page === 1 ? "invisible" : "visible"
           }`}
           onClick={() => setPaging(false)}
@@ -28,7 +28,7 @@ const ProjectList = () => {
         </button>
         <span>{page}</span>
         <button
-          className={`hover:font-bold hover:text-sky-800 ${
+          className={`hover:font-bold hover:underline ${
             page === maxPage ? "invisible" : "visible"
           }`}
           onClick={() => setPaging(true)}
@@ -39,7 +39,7 @@ const ProjectList = () => {
       <ul className="flex flex-col self-center gap-2">
         {repos.slice((page - 1) * PAGING, page * PAGING).map((r) => (
           <li key={r.id}>
-            <Link className="hover:text-sky-800" to={r.html_url}>
+            <Link className="hover:underline" to={r.html_url}>
               {r.full_name} {r.language}
             </Link>
           </li>
