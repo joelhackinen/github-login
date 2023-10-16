@@ -1,11 +1,7 @@
-import {
-  createBrowserRouter,
-  redirect,
-  defer
-} from 'react-router-dom';
-import App from './App.jsx';
-import Profile from './Profile.jsx';
-import Main from './Main.jsx';
+import { createBrowserRouter, redirect, defer } from "react-router-dom";
+import App from "./App.jsx";
+import Profile from "./Profile.jsx";
+import Main from "./Main.jsx";
 
 const tokenClosure = (() => {
   let githubAccessToken;
@@ -40,9 +36,9 @@ const profileLoader = async () => {
   let res1 = await fetch("https://api.github.com/user", {
     method: "GET",
     headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${tokenClosure.get()}`,
-      'X-GitHub-Api-Version': '2022-11-28',
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${tokenClosure.get()}`,
+      "X-GitHub-Api-Version": "2022-11-28",
     },
   });
 
@@ -51,7 +47,7 @@ const profileLoader = async () => {
 
   return defer({
     user,
-    repos: reposData.then((res) => res.json())
+    repos: reposData.then((res) => res.json()),
   });
 };
 
@@ -62,29 +58,29 @@ const logoutAction = () => {
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <App />,
-    errorElement: <div className='text-sky-500'>moro</div>,
+    errorElement: <div className="text-sky-500">moro</div>,
     children: [
       {
-        path: '/',
-        element: <Main />
+        path: "/",
+        element: <Main />,
       },
       {
-        path: '/profile',
+        path: "/profile",
         loader: profileLoader,
-        element: <Profile />
+        element: <Profile />,
       },
       {
-        path: '/github/callback/*',
+        path: "/github/callback/*",
         loader: githubCallbackLoader,
       },
     ],
   },
   {
-    path: '/logout',
+    path: "/logout",
     action: logoutAction,
-  }
+  },
 ]);
 
 export default router;
