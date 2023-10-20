@@ -11,7 +11,7 @@ const Profile = () => {
       <div className="flex items-center justify-between gap-x-10">
         <div className="flex flex-nowrap items-center gap-x-3">
           <div className="flex-col">
-            <div className="flex-0">{"logged in as"}</div>
+            <div className="flex-0">logged in as</div>
             <div className="flex-0">
               <Link
                 className="font-semibold hover:underline"

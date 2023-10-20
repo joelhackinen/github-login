@@ -14,6 +14,9 @@ const tokenClosure = (() => {
     set: (token) => {
       setToken(token);
     },
+    remove: () => {
+      setToken(undefined);
+    },
     get: () => {
       return githubAccessToken;
     },
@@ -33,16 +36,13 @@ const profileLoader = async () => {
     return redirect("/");
   }
 
-  let res1 = await fetch("https://api.github.com/user", {
-    method: "GET",
+  const userResponse = await fetch("/api/github/getUser", {
     headers: {
-      Accept: "application/vnd.github+json",
       Authorization: `Bearer ${tokenClosure.get()}`,
-      "X-GitHub-Api-Version": "2022-11-28",
     },
   });
 
-  const user = await res1.json();
+  const user = await userResponse.json();
   const reposData = fetch(user.repos_url);
 
   return defer({
@@ -52,8 +52,16 @@ const profileLoader = async () => {
 };
 
 const logoutAction = () => {
-  tokenClosure.set(undefined);
+  tokenClosure.remove();
   return redirect("/");
+};
+
+const loginAction = () => {
+  return redirect(
+    `https://github.com/login/oauth/authorize?client_id=${
+      import.meta.env.VITE_GITHUB_CLIENT
+    }`,
+  );
 };
 
 const router = createBrowserRouter([
@@ -80,6 +88,10 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     action: logoutAction,
+  },
+  {
+    path: "/login",
+    action: loginAction,
   },
 ]);
 

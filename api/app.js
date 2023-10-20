@@ -28,6 +28,20 @@ const handleGetAccessToken = async (request) => {
   return Response.json(data);
 };
 
+const handleGetUser = async (request) => {
+  const token = request.headers.get("Authorization");
+  const response = await fetch("https://api.github.com/user", {
+    method: "GET",
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: token,
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+  const data = await response.json();
+  return Response.json(data);
+};
+
 const urlMapping = [
   {
     method: "GET",
@@ -38,7 +52,12 @@ const urlMapping = [
     method: "GET",
     pattern: new URLPattern({ pathname: "/github/getAccessToken" }),
     fn: handleGetAccessToken,
-  }
+  },
+  {
+    method: "GET",
+    pattern: new URLPattern({ pathname: "/github/getUser" }),
+    fn: handleGetUser,
+  },
 ];
 
 const handleRequest = async (request) => {

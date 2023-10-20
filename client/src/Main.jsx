@@ -1,17 +1,19 @@
-import { Link } from "react-router-dom";
+import { useSubmit } from "react-router-dom";
 
 const Main = () => {
+  const submit = useSubmit();
+
   return (
     <div className="fixed left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 text-center">
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">
           Just testing the GitHub API and Tailwindcss
         </h1>
-        <Link
-          to={`https://github.com/login/oauth/authorize?client_id=${
-            import.meta.env.VITE_GITHUB_CLIENT
-          }`}
+        <button
           className="flex items-center justify-center rounded-lg border-2 border-sky-950 hover:font-semibold dark:border-sky-500"
+          onClick={() => {
+            submit(null, { method: "post", action: "/login" });
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +30,7 @@ const Main = () => {
             />
           </svg>
           <span>Log in with GitHub!</span>
-        </Link>
+        </button>
       </div>
     </div>
   );
