@@ -21,8 +21,8 @@ const App = () => {
   }, []);
 
   return (
-    <div className="font-mono dark:text-sky-500 text-sky-950 text-lg min-w-min underline-offset-4 decoration-2">
-      <button className="mt-2 ml-2" onClick={() => setTheme(!darkMode)}>
+    <div className="min-w-min font-mono text-lg text-sky-950 decoration-2 underline-offset-4 dark:text-sky-500">
+      <button className="ml-2 mt-2" onClick={() => setTheme(!darkMode)}>
         {darkMode ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +30,7 @@ const App = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6"
+            className="h-8 w-8 hover:animate-spin-slow"
           >
             <path
               strokeLinecap="round"
@@ -45,7 +45,7 @@ const App = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6"
+            className="h-8 w-8 hover:animate-pulse"
           >
             <path
               strokeLinecap="round"

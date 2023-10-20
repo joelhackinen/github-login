@@ -17,7 +17,7 @@ const ProjectList = () => {
 
   return (
     <div className="flex flex-col gap-12">
-      <div className="flex flex-row self-center gap-x-16">
+      <div className="flex flex-row gap-x-16 self-center">
         <button
           className={`hover:font-bold hover:underline ${
             page === 1 ? "invisible" : "visible"
@@ -36,7 +36,7 @@ const ProjectList = () => {
           {">>"}
         </button>
       </div>
-      <ul className="flex flex-col self-center gap-2">
+      <ul className="flex flex-col gap-2 self-center">
         {repos.slice((page - 1) * PAGING, page * PAGING).map((r) => (
           <li key={r.id}>
             <Link className="hover:underline" to={r.html_url}>
