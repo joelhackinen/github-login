@@ -1,0 +1,9 @@
+FROM denoland/deno:alpine-1.36.4
+
+EXPOSE 7777
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+CMD [ "run", "--unstable", "--allow-net", "--allow-read", "--allow-env", "app.js" ]

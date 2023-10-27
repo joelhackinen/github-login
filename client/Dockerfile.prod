@@ -1,0 +1,26 @@
+FROM node:18.18.1-bullseye-slim AS build-stage
+
+WORKDIR /usr/src/app
+
+COPY project.env .env
+
+ENV $(cat .env | xargs)
+
+COPY . .
+
+RUN npm ci
+
+RUN npx tailwindcss -i ./src/input.css -o ./dist/output.css
+
+RUN npm run build
+
+
+FROM node:18.18.1-bullseye-slim
+
+WORKDIR /usr/src/app
+
+COPY --from=build-stage /usr/src/app/build build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "build"]
