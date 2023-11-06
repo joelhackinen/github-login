@@ -4,6 +4,12 @@ EXPOSE 7777
 
 WORKDIR /usr/src/app
 
+COPY deps.ts .
+
+RUN deno cache deps.ts
+
 COPY . .
 
-CMD [ "run", "--unstable", "--allow-net", "--allow-read", "--allow-env", "app.js" ]
+RUN deno cache app.ts
+
+CMD [ "run", "--unstable", "--allow-net", "--allow-read", "--allow-env", "app.ts" ]

@@ -23,7 +23,7 @@ services:
       - '3000:3000'
     container_name: login-client
     env_file:
-      - project.env
+      - ./client/.env
     depends_on:
       - api
 
@@ -38,5 +38,5 @@ services:
     ports:
       - '7777:7777'
     env_file:
-      - project.env
+      - ./api/.env
     container_name: login-api

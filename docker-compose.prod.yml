@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile.prod
     container_name: login-client
     env_file:
-      - project.env
+      - ./api/.env
     depends_on:
       - api
 
@@ -30,5 +30,5 @@ services:
       dockerfile: Dockerfile.prod
     restart: 'on-failure'
     env_file:
-      - project.env
+      - ./client/.env
     container_name: login-api

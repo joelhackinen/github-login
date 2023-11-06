@@ -2,10 +2,6 @@ FROM node:18.18.1-bullseye-slim AS build-stage
 
 WORKDIR /usr/src/app
 
-COPY project.env .env
-
-ENV $(cat .env | xargs)
-
 COPY . .
 
 RUN npm ci
